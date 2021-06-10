@@ -1,18 +1,41 @@
-const mouseCircle = document.querySelector('.mouse-circle');
-const mouseDot = document.querySelector('.mouse-dot');
+const navbar = document.querySelector(".navbar");
+const navbarOffsetTop = navbar.offsetTop;
+const sections = document.querySelectorAll("section");
+const navbarLinks = document.querySelectorAll(".navbar-link");
+const progress = document.querySelector(".progress-bars-wrapper");
+const progressBarPercents = [97, 89, 85, 87, 80, 70, 50];
 
-//Mouse Circle
-const mouseCircleFn = (x,y)=>{
-    mouseCircle.style.cssText = `top: ${y}px; left: ${x}px`;
-    mouseDot.style.cssText = `top: ${y}px; left: ${x}px`;
-    };
+window.addEventListener("scroll", () => {
+  mainFn();
+});
 
-document.body.addEventListener("mousemove", (e) => {
-    let x = e.clientX;
-    let y = e.clientY;
-   
-    mouseCircleFn(x, y);
+const mainFn = () => {
+  if (window.pageYOffset >= navbarOffsetTop) {
+    navbar.classList.add("sticky");
+  } else {
+    navbar.classList.remove("sticky");
+  }
+
+  sections.forEach((section, i) => {
+    if (window.pageYOffset >= section.offsetTop - 10) {
+      navbarLinks.forEach((navbarLink) => {
+        navbarLink.classList.remove("change");
+      });
+      navbarLinks[i].classList.add("change");
+    }
   });
 
+  if (window.pageYOffset + window.innerHeight >= progress.offsetTop) {
+    document.querySelectorAll(".progress-percent").forEach((el, i) => {
+      el.style.width = `${progressBarPercents[i]}%`;
+      el.previousElementSibling.firstElementChild.textContent =
+        progressBarPercents[i];
+    });
+  }
+};
 
-//End of Mouse Circle
+mainFn();
+
+window.addEventListener("resize", () => {
+  window.location.reload();
+});
